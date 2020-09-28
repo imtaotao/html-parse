@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>html-parse by imtaotao</title>
+</head>
+<body>
+  <time pubdate>2011-01-28</time>
+<script type="module">
+  import { parse, evaluate } from './src/index.js'
+  const html = document.firstElementChild.outerHTML;
+  // const builds = parse(`
+  //   <div>
+  //     <br a=1>
+  //     <a href="d">click</a>
+  //     <div>child</div>
+  //   </div>
+  // `);
+  const builds = parse(html)
+  const ast = evaluate(builds, (tag, props, children) => {
+
+  })
+
+  console.log(builds)
+  console.log(ast)
+</script>
+</body>
+</html>
