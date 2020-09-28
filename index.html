@@ -6,23 +6,17 @@
   <title>html-parse by imtaotao</title>
 </head>
 <body>
-  <time pubdate>2011-01-28</time>
+<time pubdate>2011-01-28</time>
 <script type="module">
-  import { parse, evaluate } from './src/index.js'
-  const html = document.firstElementChild.outerHTML;
-  // const builds = parse(`
-  //   <div>
-  //     <br a=1>
-  //     <a href="d">click</a>
-  //     <div>child</div>
-  //   </div>
-  // `);
-  const builds = parse(html)
-  const ast = evaluate(builds, (tag, props, children) => {
+  import { parse, evaluate } from './index.js'
+  const html = document.firstElementChild.innerHTML;
 
+  const built = parse(html)
+  const ast = evaluate(built, (tag, props, ...children) => {
+    return { tag, props, children }
   })
 
-  console.log(builds)
+  console.log(built)
   console.log(ast)
 </script>
 </body>

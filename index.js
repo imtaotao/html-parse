@@ -1,18 +1,27 @@
-import { isSingleTag } from './sangleTags.js'
-
 // 标记
-const MODE_SLASH = '/'
-const MODE_TEXT = 'text'
-const MODE_WHITESPACE = ' '
-const MODE_TAGNAME = 'tagName'
-const MODE_COMMENT = '<!-- comment -->'
-const MODE_PROP_SET = 'props'
+const MODE_TEXT = 0
+const MODE_SLASH = 1
+const MODE_TAGNAME = 2
+const MODE_COMMENT = 3
+const MODE_PROP_SET = 4
+const MODE_WHITESPACE = 5
 
 // 生成的标记
 const TAG_SET = 'tag'
 const PROP_SET = 'props'
 const CHILD_APPEND = 'child'
 const CHILD_RECURSE = 'child_recurse'
+
+// 单标签
+const SINGLE_TAGS = [
+  'br',
+  'hr',
+  'img',
+  'link',
+  'meta',
+  'input',
+  'param',
+]
 
 function filter(code) {
   code = code.trim()
@@ -21,9 +30,18 @@ function filter(code) {
     : code
 }
 
+function makeMap (list) {
+  const map = Object.create(null)
+  for (let i = 0; i < list.length; i++) {
+    map[list[i]] = true
+  }
+  return val => map[val]
+}
+
+const isSingleTag = makeMap(SINGLE_TAGS)
+
 export function parse(code) {
   code = filter(code)
-  console.log(code);
 
   let propName
   let quote = ''
@@ -134,4 +152,27 @@ export function parse(code) {
 
   commit()
   return scope
+}
+
+export function evaluate(built, cb) {
+  const args = ['', null]
+  for (let i = 0; i < built.length; i++) {
+    const [type, name, prop] = built[i]
+    const value = prop === undefined ? name :  prop
+
+    if (type === TAG_SET) {
+      args[0] = value
+    } else if (type === PROP_SET) {
+      (args[1] = args[1] || {})[name] = value
+    } else if (type === CHILD_RECURSE) {
+      args.push(cb.apply(null, evaluate(value, cb)))
+    } else if (type === CHILD_APPEND) {
+      args.push(value)
+    }
+  }
+  return args
+}
+
+export function createAst() {
+
 }
