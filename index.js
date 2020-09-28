@@ -172,7 +172,3 @@ export function evaluate(built, cb) {
   }
   return args
 }
-
-export function createAst() {
-
-}
