@@ -6,7 +6,8 @@
   "module": "./index.js",
   "scripts": {
     "start": "http-server ./",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "test": "node ./test/index.js"
   },
   "publishConfig": {
     "registry": "http://registry.npmjs.org"
