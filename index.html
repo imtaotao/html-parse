@@ -9,15 +9,35 @@
 <time pubdate>2011-01-28</time>
 <script type="module">
   import { parse, evaluate } from './index.js'
-  const html = document.firstElementChild.innerHTML;
+  const html = document.firstElementChild.outerHTML;
 
-  const built = parse(html)
-  const ast = evaluate(built, (tag, props, ...children) => {
-    return { tag, props, children }
+  fetch('./test/one.html').then(res => res.text()).then(text => {
+    const built = parse(text)
+    const ast = evaluate(built, (tag, props, ...children) => {
+      return { tag, props, children }
+    })
+    console.log(JSON.stringify(ast, null, 2));
   })
 
-  console.log(built)
-  console.log(ast)
+  // const built = parse(html)
+  // const ast = evaluate(built, (tag, props, ...children) => {
+  //   return { tag, props, children }
+  // })
+
+  // console.log(built)
+  // console.log(ast)
+  
+  // const built = parse(`
+  //   <div>
+  //     <br>
+  //     <a href="xxx">
+  //   </div>
+  //   <div>21</div>
+  // `)
+  // const ast = evaluate(built, (tag, props, ...children) => {
+  //   return { tag, props, children }
+  // })
+  // console.log(built, ast);
 </script>
 </body>
 </html>
