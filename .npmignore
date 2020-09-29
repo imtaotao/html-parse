@@ -1,8 +1,10 @@
 .DS_Store
+data
 node_modules
 .gitignore
 .npmignore
 index.html
+rollup.config.js
 
 # Log files
 yarn-debug.log*

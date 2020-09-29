@@ -1,8 +1,9 @@
 {
   "name": "@rustle/html-parse",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "simple html parser",
   "main": "./dist/htmlParse.cjs.js",
+  "module": "./index.js",
   "scripts": {
     "start": "http-server ./",
     "build": "rollup -c"
