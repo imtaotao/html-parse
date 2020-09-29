@@ -1,11 +1,25 @@
 {
-  "name": "html-parse",
+  "name": "@rustle/html-parse",
   "version": "0.0.1",
   "description": "simple html parser",
-  "main": "index.js",
+  "main": "./dist/htmlParse.cjs.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "http-server ./",
+    "build": "rollup -c"
   },
+  "publishConfig": {
+    "registry": "http://registry.npmjs.org"
+  },
+  "keywords": [
+    "html",
+    "parse",
+    "html-parse"
+  ],
+  "homepage": "https://github.com/imtaotao/html-parse",
+  "repository": "https://github.com/imtaotao/html-parse.git",
   "author": "imtaotao",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "rollup": "^2.28.2"
+  }
 }
