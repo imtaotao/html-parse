@@ -23,8 +23,6 @@ const SINGLE_TAGS = [
   'param',
 ]
 
-const SCRIPT_END = '/script>'
-
 function filter(code) {
   code = code.trim()
   return code.startsWith('<!DOCTYPE html>') || code.startsWith('<!doctype html>')

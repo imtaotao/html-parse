@@ -19,6 +19,14 @@
     console.log(ast);
   })
 
+  fetch('./test/two.html').then(res => res.text()).then(text => {
+    const built = parse(text)
+    const ast = evaluate(built, (tag, props, ...children) => {
+      return { tag, props, children }
+    })
+    console.log(2, ast);
+  })
+
   // const built = parse(html)
   // const ast = evaluate(built, (tag, props, ...children) => {
   //   return { tag, props, children }
