@@ -13,14 +13,26 @@ const CHILD_APPEND = 'child'
 const CHILD_RECURSE = 'child_recurse'
 
 // 单标签
-const SINGLE_TAGS = [
-  'br',
-  'hr',
-  'img',
-  'link',
-  'meta',
-  'input',
-  'param',
+const voidElements = [
+  "area",
+  "base",
+  "basefont",
+  "br",
+  "col",
+  "command",
+  "embed",
+  "frame",
+  "hr",
+  "img",
+  "input",
+  "isindex",
+  "keygen",
+  "link",
+  "meta",
+  "param",
+  "source",
+  "track",
+  "wbr",
 ]
 
 function filter(code) {
@@ -38,7 +50,7 @@ function makeMap (list) {
   return val => map[val]
 }
 
-const isSingleTag = makeMap(SINGLE_TAGS)
+const isSingleTag = makeMap(voidElements)
 
 export function parse(code, fws = true) {
   code = filter(code)
