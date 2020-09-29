@@ -1,6 +1,6 @@
 ## html-parse
 简单的 `html-parse` 解析器，能够兼容无 `/` 单标签。
-  > 对 script 标签的内容，暂无处理
+  > 对 script 标签的内容，如果有 html 内容的字符串，暂无处理
 
 ```js
 import { parse, evaluate } from './index.js'
@@ -17,4 +17,14 @@ const ast = evaluate(built, (tag, props, ...children) => {
 })
 
 console.log(ast)
+```
+
+```js
+// 获取所有的 div 标签
+const divs = []
+evaluate(built, (tag, props, ...children) => {
+  if (tag === 'div') {
+    divs.push({ tag, props, children })
+  }
+})
 ```
