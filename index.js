@@ -23,9 +23,11 @@ const SINGLE_TAGS = [
   'param',
 ]
 
+const SCRIPT_END = '/script>'
+
 function filter(code) {
   code = code.trim()
-  return code.startsWith('<!DOCTYPE html>')
+  return code.startsWith('<!DOCTYPE html>') || code.startsWith('<!doctype html>')
     ? code.slice(15, code.length).trim()
     : code
 }
@@ -40,7 +42,7 @@ function makeMap (list) {
 
 const isSingleTag = makeMap(SINGLE_TAGS)
 
-export function parse(code) {
+export function parse(code, fws = true) {
   code = filter(code)
 
   let propName
@@ -49,7 +51,7 @@ export function parse(code) {
   let scope = []
   let mode = MODE_TEXT
   const len = code.length
-  scope.parent = null
+  scope.parent = []
 
   const back = () => {
     const cur = scope
@@ -57,11 +59,23 @@ export function parse(code) {
     scope.push([CHILD_RECURSE, cur])
   }
 
+  const getCurTag = () => {
+    if (scope && scope[0]) {
+      return scope[0][0] === TAG_SET
+        ? scope[0][1]
+        : null
+    }
+    return null
+  }
+
   const commit = () => {
     if (!buffer) return
     if (mode === MODE_TEXT) {
-      // append 文本内容
-      if (buffer = buffer.replace(/^\s*\n\s*|\s*\n\s*$/g, '')) {
+      // append 文本内容，pre 标签内的内容要特殊处理
+      const curTag = getCurTag()
+      if (!fws || curTag === 'pre') {
+        scope.push([CHILD_APPEND, buffer])
+      } else if (buffer = buffer.replace(/^\s*\n\s*|\s*\n\s*$/g, '')) {
         scope.push([CHILD_APPEND, buffer])
       }
     } else if (mode === MODE_TAGNAME) {
@@ -73,14 +87,15 @@ export function parse(code) {
       // <a disable />
       scope.push([PROP_SET, buffer, true])
     } else if (mode === MODE_PROP_SET) {
-      scope.push([mode, propName, buffer])
+      scope.push([PROP_SET, propName, buffer])
     }
+
     buffer = ''
   }
 
   for (let i = 0; i < len; i++) {
     const char = code[i]
-  
+    
     if (mode === MODE_TEXT) {
       if (char === '<') {
         commit()
@@ -92,7 +107,7 @@ export function parse(code) {
         buffer += char
       }
     } else if (mode === MODE_COMMENT) {
-      // Filter out comments
+      // 过滤注释节点
       if (buffer === '--' && char === '>') {
         mode = MODE_TEXT
         buffer = ''
@@ -112,11 +127,9 @@ export function parse(code) {
       quote = char
     } else if (char === '>') {
       commit()
-      if (scope && scope[0]) {
-        const [tag, tagName] = scope[0]
-        if (tag === TAG_SET && isSingleTag(tagName)) {
-          back()
-        }
+      // 如果是单标签
+      if (isSingleTag(getCurTag())) {
+        back()
       }
       mode = MODE_TEXT
     } else if (mode === MODE_SLASH) {
@@ -154,7 +167,7 @@ export function parse(code) {
   return scope
 }
 
-export function evaluate(built, cb) {
+export function evaluate(built, cb, insert) {
   const args = ['', null]
   for (let i = 0; i < built.length; i++) {
     const [type, name, prop] = built[i]
@@ -165,10 +178,10 @@ export function evaluate(built, cb) {
     } else if (type === PROP_SET) {
       (args[1] = args[1] || {})[name] = value
     } else if (type === CHILD_RECURSE) {
-      args.push(cb.apply(null, evaluate(value, cb)))
+      args.push(cb.apply(null, evaluate(value, cb, true)))
     } else if (type === CHILD_APPEND) {
       args.push(value)
     }
   }
-  return args
+  return !insert ? cb.apply(null, args) : args
 }
