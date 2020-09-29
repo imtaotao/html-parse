@@ -16,7 +16,7 @@
     const ast = evaluate(built, (tag, props, ...children) => {
       return { tag, props, children }
     })
-    console.log(JSON.stringify(ast, null, 2));
+    console.log(ast);
   })
 
   // const built = parse(html)
