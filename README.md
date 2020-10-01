@@ -11,7 +11,7 @@ import { parse, evaluate } from '@rustle/html-parse'
 const built = parse(`
   <div>
     <br>
-    <a href="xxx">
+    <a href="xxx"/>
   </div>
 `)
 

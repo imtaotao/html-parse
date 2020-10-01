@@ -193,5 +193,5 @@ export function evaluate(built, cb, insert) {
       args.push(value)
     }
   }
-  return !insert ? cb.apply(null, args) : args
+  return insert ? args : cb.apply(null, args)
 }
