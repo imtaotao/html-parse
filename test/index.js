@@ -45,9 +45,9 @@ function wakeObject(a, b) {
 function createExpect(desc) {
   const log = condition => {
     if (condition) {
-      console.error(`[Success]: ${desc}`)
+      console.log(`✅: ${desc}`)
     } else {
-      console.error(`[Error]: ${desc}`)
+      console.error(`❌: ${desc}`)
       process.exit(0)
     }
   }
