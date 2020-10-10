@@ -31,3 +31,7 @@ evaluate(built, (tag, props, ...children) => {
   }
 })
 ```
+
+### 特殊 tag
+特殊 tag 用大写标识
++ 注释节点：`COMMENT`

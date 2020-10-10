@@ -37,6 +37,7 @@
   
   const built = parse(`
     <div v-for="v in list">
+      <!-- 注释节点 -->
       <br>
       <a href="xxx"/>
     </div>
@@ -45,6 +46,7 @@
   const ast = evaluate(built, (tag, props, ...children) => {
     return { tag, props, children }
   })
+  console.log(built);
   console.log(ast.children);
 </script>
 </body>
