@@ -6,48 +6,19 @@
   <title>html-parse by imtaotao</title>
 </head>
 <body>
-<time pubdate>2011-01-28</time>
+<script src="./data/test.js"></script>
 <script type="module">
   import { parse, evaluate } from './index.js'
   const html = document.firstElementChild.outerHTML;
 
-  // fetch('./test/one.html').then(res => res.text()).then(text => {
-  //   const built = parse(text)
-  //   const ast = evaluate(built, (tag, props, ...children) => {
-  //     return { tag, props, children }
-  //   })
-  //   console.log(ast);
-  // })
-
-  // fetch('./test/two.html').then(res => res.text()).then(text => {
-  //   const built = parse(text)
-  //   const ast = evaluate(built, (tag, props, ...children) => {
-  //     return { tag, props, children }
-  //   })
-  //   console.log(2, ast);
-  // })
-
-  // const built = parse(html)
-  // const ast = evaluate(built, (tag, props, ...children) => {
-  //   return { tag, props, children }
-  // })
-
-  // console.log(built)
-  // console.log(ast)
-  
-  const built = parse(`
-    <div v-for="v in list">
-      <!-- 注释节点 -->
-      <br>
-      <a href="xxx"/>
-    </div>
-    <div>21</div>
-  `)
-  const ast = evaluate(built, (tag, props, ...children) => {
-    return { tag, props, children }
+  testHTML.then(text => {
+    const built = parse(text)
+    const ast = evaluate(built, (tag, props, ...children) => {
+      return { tag, props, children }
+    })
+    console.log(built);
+    console.log(ast);
   })
-  console.log(built);
-  console.log(ast.children);
 </script>
 </body>
 </html>

@@ -3,8 +3,6 @@
 [npm-url]: https://www.npmjs.com/package/@rustle/html-parse
 
 简单的 `html-parse` 解析器，能够兼容无 `/` 单标签。
-  > 对 script 标签的内容，如果有 html 内容的字符串，暂无处理
-
 ```js
 import { parse, evaluate } from '@rustle/html-parse'
 
@@ -33,5 +31,8 @@ evaluate(built, (tag, props, ...children) => {
 ```
 
 ### 特殊 tag
-特殊 tag 用大写标识
+特殊 tag 用大写标识，因为 html 标签都是用的小写，为了避免冲突，特殊的 tag 用大写标识
 + 注释节点：`COMMENT`
+
+### Caveats
+对于缺少闭合标签的语法，暂不能做到和浏览器一直的行为，所以尽可能写标准的 `html` 语法

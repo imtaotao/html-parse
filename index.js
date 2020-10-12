@@ -5,6 +5,7 @@ const MODE_TAGNAME = 2
 const MODE_COMMENT = 3
 const MODE_PROP_SET = 4
 const MODE_WHITESPACE = 5
+const MODE_FILTERTAGS = 6
 
 // 生成的标记
 const TAG_SET = 'tag'
@@ -36,6 +37,12 @@ const voidElements = [
   'basefont',
 ]
 
+// 过滤编译的标签
+const filterCompileTag = [
+  'style',
+  'script',
+]
+
 function filter(code) {
   code = code.trim()
   return code.startsWith('<!DOCTYPE html>') || code.startsWith('<!doctype html>')
@@ -43,7 +50,7 @@ function filter(code) {
     : code
 }
 
-function makeMap (list) {
+function makeMap(list) {
   const map = Object.create(null)
   for (let i = 0; i < list.length; i++) {
     map[list[i]] = true
@@ -51,7 +58,8 @@ function makeMap (list) {
   return val => map[val]
 }
 
-const isSingleTag = makeMap(voidElements)
+const singleTag = makeMap(voidElements)
+const filterTag = makeMap(filterCompileTag)
 
 export function parse(code, fws = true) {
   code = filter(code)
@@ -70,7 +78,7 @@ export function parse(code, fws = true) {
     scope.push([CHILD_RECURSE, cur])
   }
 
-  const getCurTag = () => {
+  const curtag = () => {
     if (scope && scope[0]) {
       return scope[0][0] === TAG_SET
         ? scope[0][1]
@@ -86,8 +94,7 @@ export function parse(code, fws = true) {
 
     if (mode === MODE_TEXT) {
       // append 文本内容，pre 标签内的内容要特殊处理
-      const curTag = getCurTag()
-      if (!fws || curTag === 'pre') {
+      if (!fws || curtag() === 'pre') {
         scope.push([CHILD_APPEND, buffer])
       } else if (buffer = buffer.replace(/^\s*\n\s*|\s*\n\s*$/g, '')) {
         scope.push([CHILD_APPEND, buffer])
@@ -104,6 +111,8 @@ export function parse(code, fws = true) {
       scope.push([PROP_SET, propName, buffer])
     } else if (mode === MODE_COMMENT) {
       scope.push([CHILD_COMMENT, buffer])
+    } else if (mode === MODE_FILTERTAGS) {
+      scope.push([CHILD_APPEND, buffer])
     }
 
     buffer = ''
@@ -114,11 +123,16 @@ export function parse(code, fws = true) {
     
     if (mode === MODE_TEXT) {
       if (char === '<') {
-        commit()
-        const current = []
-        current.parent = scope
-        scope = current
-        mode = MODE_TAGNAME
+        if (filterTag(curtag())) {
+          buffer += char
+          mode = MODE_FILTERTAGS
+        } else {
+          commit()
+          const current = []
+          current.parent = scope
+          scope = current
+          mode = MODE_TAGNAME
+        }
       } else {
         buffer += char
       }
@@ -132,6 +146,18 @@ export function parse(code, fws = true) {
         mode = MODE_TEXT
       } else {
         buffer += char
+      }
+    } else if (mode === MODE_FILTERTAGS) {
+      buffer += char
+      if (char === '/') {
+        const tag = curtag()
+        if (code.slice(i + 1, i + tag.length + 1) === tag) {
+          buffer = buffer.slice(0, -2)
+          commit()
+          back()
+          i += (tag.length + 1)
+          mode = MODE_TEXT
+        }
       }
     } else if (quote) {
       // 过滤多于的引号
@@ -147,12 +173,12 @@ export function parse(code, fws = true) {
     } else if (char === '>') {
       commit()
       // 如果是单标签
-      if (isSingleTag(getCurTag())) {
+      if (singleTag(curtag())) {
         back()
       }
       mode = MODE_TEXT
     } else if (mode === MODE_SLASH) {
-      // 如果是 `MODE_SLASH`，这里不需要做任何事情
+      // 如果是 `MODE_SLASH`，不需要做任何事情
       // 放在 `char === '='` 前面是因为要处理 `<ab / ba prop = value>`
       // prop 有可能在后面
     } else if (char === '=') {
