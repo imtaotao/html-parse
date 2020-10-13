@@ -142,7 +142,7 @@ function parse(code, filterWhiteSpace = true) {
       // 记录注释节点
       const l = buffer.length;
       if (buffer[l - 1] === '-' && buffer[l - 2] === '-' && char === '>') {
-        buffer = buffer.slice(0, l - 2);
+        buffer = buffer.slice(0, -2);
         commit();
         back();
         mode = MODE_TEXT;
