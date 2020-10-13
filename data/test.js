@@ -4,9 +4,9 @@ const o = url => f(`./getTestHtml?url=${url}`)
 const d1 = f('./data/one.html')
 const d2 = f('./data/two.html')
 const d3 = f('./data/three.html')
-const d4 = o('https://www.baidu.com/')
-const d5 = o('https://mp.toutiao.com/')
-const d6 = o('https://cloud.bytedance.net/')
+const o1 = o('https://www.baidu.com/')
+const o2 = o('https://mp.toutiao.com/')
+const o3 = o('https://cloud.bytedance.net/')
 const d = `
   <div>
     <script type="module">
@@ -22,4 +22,4 @@ const d = `
   <div></div>
 `
 
-window.testHTML = Promise.resolve(d5)
+window.testHTML = Promise.resolve(d3)

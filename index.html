@@ -6,20 +6,24 @@
   <title>html-parse by imtaotao</title>
 </head>
 <body>
+<input type="text" id="GetUrl">
+<button id="Run">run</button>
 <script src="./data/test.js"></script>
 <script type="module">
   import { parse, evaluate } from './index.js'
   const html = document.firstElementChild.outerHTML;
 
-  testHTML.then(text => {
+  const run = text => {
     const built = parse(text)
-    const ast = evaluate(built, (tag, props, ...children) => {
+    const ast = window.ast = evaluate(built, (tag, props, ...children) => {
       return { tag, props, children }
     })
     const dom = window.dom = (new DOMParser).parseFromString(text, 'text/html')
     console.log(ast);
-    console.log(dom);
-  })
+  }
+
+  testHTML.then(run)
+  Run.onclick = e => o(GetUrl.value).then(run)
 </script>
 </body>
 </html>

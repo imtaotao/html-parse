@@ -177,6 +177,7 @@ function parse(code, filterWhiteSpace = true) {
       // 如果是单标签或者 html 类型声明
       const tag = curtag();
       if (singleTag(tag) || doctype(tag)) {
+        // 如果单标签写成了 <br></br> 这种，浏览器会纠错，而这里暂时不纠错了
         back();
       }
       mode = MODE_TEXT;
