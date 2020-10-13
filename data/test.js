@@ -19,6 +19,7 @@ const dn = `
       var b = '<!-- <main>121</main> -->'
     </script>
   </div>
+  <div></div>
 `
 
 window.testHTML = Promise.resolve(d3)

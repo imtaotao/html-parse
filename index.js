@@ -14,6 +14,18 @@ const CHILD_APPEND = 'child'
 const CHILD_COMMENT = 'child_comment'
 const CHILD_RECURSE = 'child_recurse'
 
+// html 声明
+const doctypes = [
+  '!doctype',
+  '!DOCTYPE',
+]
+
+// 过滤编译的标签
+const filterCompileTag = [
+  'style',
+  'script',
+]
+
 // 单标签
 const voidElements = [
   'br',
@@ -37,19 +49,6 @@ const voidElements = [
   'basefont',
 ]
 
-// 过滤编译的标签
-const filterCompileTag = [
-  'style',
-  'script',
-]
-
-function filter(code) {
-  code = code.trim()
-  return code.startsWith('<!DOCTYPE html>') || code.startsWith('<!doctype html>')
-    ? code.slice(15, code.length).trim()
-    : code
-}
-
 function makeMap(list) {
   const map = Object.create(null)
   for (let i = 0; i < list.length; i++) {
@@ -58,12 +57,11 @@ function makeMap(list) {
   return val => map[val]
 }
 
+const doctype = makeMap(doctypes)
 const singleTag = makeMap(voidElements)
 const filterTag = makeMap(filterCompileTag)
 
-export function parse(code, fws = true) {
-  code = filter(code)
-
+export function parse(code, filterWhiteSpace = true) {
   let propName
   let quote = ''
   let buffer = ''
@@ -94,7 +92,7 @@ export function parse(code, fws = true) {
 
     if (mode === MODE_TEXT) {
       // append 文本内容，pre 标签内的内容要特殊处理
-      if (!fws || curtag() === 'pre') {
+      if (!filterWhiteSpace || curtag() === 'pre') {
         scope.push([CHILD_APPEND, buffer])
       } else if (buffer = buffer.replace(/^\s*\n\s*|\s*\n\s*$/g, '')) {
         scope.push([CHILD_APPEND, buffer])
@@ -172,8 +170,9 @@ export function parse(code, fws = true) {
       quote = char
     } else if (char === '>') {
       commit()
-      // 如果是单标签
-      if (singleTag(curtag())) {
+      // 如果是单标签或者 html 类型声明
+      const tag = curtag()
+      if (singleTag(tag) || doctype(tag)) {
         back()
       }
       mode = MODE_TEXT
@@ -230,5 +229,5 @@ export function evaluate(built, cb, insert) {
       args.push(value)
     }
   }
-  return insert ? args : cb.apply(null, args)
+  return insert ? args : args.slice(2)
 }
