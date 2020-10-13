@@ -1,6 +1,7 @@
 const fs = require('fs')
 const { parse, evaluate } = require('../dist/htmlParse.cjs')
 
+const errSymbol = Symbol()
 
 function compare(a, b) {
   if (!a || !b) return a === b
@@ -42,53 +43,74 @@ function wakeObject(a, b) {
   return true
 }
 
-function createExpect(desc) {
-  const log = condition => {
-    if (condition) {
-      console.log(`✅: ${desc}`)
-    } else {
-      console.error(`❌: ${desc}`)
-      process.exit(0)
-    }
+function log(desc, condition) {
+  if (condition) {
+    console.log(`[${desc}]: ✅`)
+  } else {
+    console.error(`[${desc}]: ❌`)
+    process.exit(0)
   }
+}
 
+function createExpect(desc) {
   return val => {
     return {
       tobe(res) {
-        log(val === res)
+        if (val !== res) {
+          throw errSymbol
+        }
       },
 
       // 深度遍历
       toEqual(obj) {
-        log(compare(val, obj))
+        if (!compare(val, obj)) {
+          throw errSymbol
+        }
       },
 
       toThrow(msg) {
+        let normal = false
         try {
-          fn()
-          log(false)
+          val()
+          normal = true
         } catch(error) {
-          log(msg ? msg === error.message : true)
-          console.log(error)
+          if (msg) {
+            normal = error instanceof Error
+              ? msg !== error.message
+              : msg !== error
+          }
         }
+        if (normal) throw errSymbol
       },
     }
   }
 }
 
-exports.test = function(desc, callback) {
-  callback(createExpect(desc))
+exports.it = function(desc, callback) {
+  const obj = createExpect(desc)
+  try {
+    callback(obj)
+    log(desc, true)
+  } catch(error) {
+    if (error !== errSymbol) {
+      console.log(error)
+    }
+    log(desc, false)
+  }
 }
 
-exports.vnode = function(tag, props, ...children) {
+exports.n = function(tag, props, children) {
   return { tag, props, children }
 }
 
-exports.createAst = function(code) {
-  return evaluate(parse(code), exports.vnode).children
+exports.c = function(code) {
+  return evaluate(
+    parse(code),
+    (tag, props, ...children) => ({ tag, props, children }),
+  )
 }
 
-console.log()
+console.clear()
 fs.readdir(__dirname, (err, files) => {
   if (!err) {
     files.forEach(file => {
