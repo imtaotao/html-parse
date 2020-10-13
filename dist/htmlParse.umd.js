@@ -124,7 +124,7 @@
 
     for (let i = 0; i < len; i++) {
       const char = code[i];
-      
+
       if (mode === MODE_TEXT) {
         if (char === '<') {
           if (filterTag(curtag())) {
@@ -159,7 +159,7 @@
             buffer = buffer.slice(0, -2);
             commit();
             back();
-            i += (tag.length + 2);
+            i += (tag.length + 1);
             mode = MODE_TEXT;
           }
         }

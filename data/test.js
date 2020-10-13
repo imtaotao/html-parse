@@ -3,9 +3,13 @@ const f = url => fetch(url).then(res => res.text())
 const d1 = f('./data/one.html')
 const d2 = f('./data/two.html')
 const d3 = f('./data/three.html')
-const dn = `
+const d = `
   <div v-for="v in list">
-    <!-- <main>121</main> -->
+    <style>
+      a {
+        content: '<script></script>'
+      }
+    </style><!-- <main>121</main> -->
     <br>
     <script type="module">
       window.addEventListener("load", function () {
@@ -22,4 +26,4 @@ const dn = `
   <div></div>
 `
 
-window.testHTML = Promise.resolve(d3)
+window.testHTML = Promise.resolve(d)
