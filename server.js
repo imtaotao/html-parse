@@ -1,6 +1,7 @@
 const express = require('express')
 const request = require('request')
-const app = express();
+const app = express()
+const port = 2334
 
 app.use(express.static(__dirname))
 
@@ -14,4 +15,4 @@ app.get('/getTestHtml', (req, res) => {
   }
 })
 
-app.listen(2333, () => console.log('http://localhost:2333'))
+app.listen(port, () => console.log(`http://localhost:${port}`))
