@@ -45,14 +45,14 @@ function wakeObject(a, b) {
 
 function log(desc, condition) {
   if (condition) {
-    console.log(`[${desc}]: ✅`)
+    console.log(`✅: [${desc}]`)
   } else {
-    console.error(`[${desc}]: ❌`)
+    console.error(`❌: [${desc}]`)
     process.exit(0)
   }
 }
 
-function createExpect(desc) {
+function expectObject() {
   return val => {
     return {
       tobe(res) {
@@ -87,9 +87,8 @@ function createExpect(desc) {
 }
 
 exports.it = function(desc, callback) {
-  const obj = createExpect(desc)
   try {
-    callback(obj)
+    callback(expectObject())
     log(desc, true)
   } catch(error) {
     if (error !== errSymbol) {

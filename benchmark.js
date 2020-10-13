@@ -15,9 +15,9 @@ const bench = benchmark((html, callback) => {
 })
 
 bench.on('progress', key => {
-	console.log('finished parsing ' + key + '.html')
+  console.log('finished parsing ' + key + '.html')
 })
 
 bench.on('result', stat => {
-	console.log(stat.mean().toPrecision(6) + ' ms/file ± ' + stat.sd().toPrecision(6))
+  console.log(stat.mean().toPrecision(6) + ' ms/file ± ' + stat.sd().toPrecision(6))
 })
