@@ -4,8 +4,10 @@ test
 node_modules
 .gitignore
 .npmignore
+benchmark.js
 index.html
 rollup.config.js
+server.js
 
 # Log files
 yarn-debug.log*
