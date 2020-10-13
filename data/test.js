@@ -2,6 +2,7 @@ const f = url => fetch(url).then(res => res.text())
 
 const d1 = f('./data/one.html')
 const d2 = f('./data/two.html')
+const d3 = f('./data/three.html')
 const dn = `
   <div v-for="v in list">
     <!-- <main>121</main> -->
@@ -20,4 +21,4 @@ const dn = `
   </div>
 `
 
-window.testHTML = Promise.resolve(dn)
+window.testHTML = Promise.resolve(d3)

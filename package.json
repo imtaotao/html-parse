@@ -1,6 +1,6 @@
 {
   "name": "@rustle/html-parse",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "simple html parser",
   "main": "./dist/htmlParse.cjs.js",
   "module": "./index.js",

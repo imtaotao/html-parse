@@ -153,13 +153,13 @@ function parse(code, fws = true) {
       }
     } else if (mode === MODE_FILTERTAGS) {
       buffer += char;
-      if (char === '/') {
+      if (char === '/' && code[i - 1] === '<') {
         const tag = curtag();
-        if (code.slice(i + 1, i + tag.length + 1) === tag) {
+        if (code.slice(i + 1, i + tag.length + 2) === (tag + '>')) {
           buffer = buffer.slice(0, -2);
           commit();
           back();
-          i += (tag.length + 1);
+          i += (tag.length + 2);
           mode = MODE_TEXT;
         }
       }
