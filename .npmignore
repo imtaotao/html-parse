@@ -1,5 +1,6 @@
 .DS_Store
 data
+test
 node_modules
 .gitignore
 .npmignore

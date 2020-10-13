@@ -9,7 +9,7 @@ const bench = benchmark((html, callback) => {
     })
     callback()
   } catch(error) {
-    console.log(error);
+    console.log(error)
     callback()
   }
 })
