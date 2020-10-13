@@ -1,16 +1,14 @@
 const f = url => fetch(url).then(res => res.text())
+const o = url => f(`./getTestHtml?url=${url}`)
 
 const d1 = f('./data/one.html')
 const d2 = f('./data/two.html')
 const d3 = f('./data/three.html')
+const d4 = o('https://www.baidu.com/')
+const d5 = o('https://mp.toutiao.com/')
+const d6 = o('https://cloud.bytedance.net/')
 const d = `
-  <div v-for="v in list">
-    <style>
-      a {
-        content: '<script></script>'
-      }
-    </style><!-- <main>121</main> -->
-    <br>
+  <div>
     <script type="module">
       window.addEventListener("load", function () {
         try {
@@ -19,11 +17,9 @@ const d = `
           window.localStorage.setItem("SUPPORT_WEBP", s)
         } catch (e) { } 
       });
-      var a = '<main>121</main>'
-      var b = '<!-- <main>121</main> -->'
     </script>
   </div>
   <div></div>
 `
 
-window.testHTML = Promise.resolve(d)
+window.testHTML = Promise.resolve(d5)

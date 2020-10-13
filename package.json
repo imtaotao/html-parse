@@ -5,8 +5,8 @@
   "main": "./dist/htmlParse.cjs.js",
   "module": "./index.js",
   "scripts": {
-    "start": "http-server ./",
     "build": "rollup -c",
+    "start": "node ./server.js",
     "test": "node ./test/index.js"
   },
   "publishConfig": {
@@ -22,6 +22,8 @@
   "author": "imtaotao",
   "license": "MIT",
   "devDependencies": {
-    "rollup": "^2.28.2"
+    "rollup": "^2.28.2",
+    "express": "^4.17.1",
+    "request": "^2.88.2"
   }
 }

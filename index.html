@@ -6,11 +6,6 @@
   <title>html-parse by imtaotao</title>
 </head>
 <body>
-  <style>
-    a {
-      content: '<script></script>'
-    }
-  </style><!-- <main>121</main> -->
 <script src="./data/test.js"></script>
 <script type="module">
   import { parse, evaluate } from './index.js'
@@ -21,8 +16,9 @@
     const ast = evaluate(built, (tag, props, ...children) => {
       return { tag, props, children }
     })
-    console.log(built);
+    const dom = window.dom = (new DOMParser).parseFromString(text, 'text/html')
     console.log(ast);
+    console.log(dom);
   })
 </script>
 </body>
