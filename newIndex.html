@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>html-parse by imtaotao</title>
+</head>
+<body>
+<script type="module">
+  import { parse } from './src/index.js'
+  const html = document.firstElementChild.outerHTML;
+  const ast = parse(`
+    <div>
+      <li>
+          1
+          <li>2
+          <li>3
+      </li>  
+    </div>
+  `)
+  console.log(ast)
+</script>
+</body>
+</html>

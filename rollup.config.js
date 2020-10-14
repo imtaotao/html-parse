@@ -10,7 +10,7 @@ remove('./dist', true)
 
 const conf = output => ({
   output,
-  input: './index.js',
+  input: './src/index.js',
 })
 
 export default [
